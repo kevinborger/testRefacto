@@ -78,43 +78,10 @@ class TemplateManager
          * @var Replace $replace
          */
         foreach($this->replaces as $replace) {
-            //TODO
+            if(method_exists($this, $replace->getType() . '_' . $replace->getName()))
+                $text = $this->{$replace->getType() . '_' . $replace->getName()}($text);
         }
-
-        if ($this->quote)
-        {
-            $containsSummaryHtml = strpos($text, '[quote:summary_html]');
-            $containsSummary     = strpos($text, '[quote:summary]');
-
-            if ($containsSummaryHtml !== false || $containsSummary !== false) {
-                if ($containsSummaryHtml !== false) {
-                    $text = str_replace(
-                        '[quote:summary_html]',
-                        Quote::renderHtml($this->quote),
-                        $text
-                    );
-                }
-                if ($containsSummary !== false) {
-                    $text = str_replace(
-                        '[quote:summary]',
-                        Quote::renderText($this->quote),
-                        $text
-                    );
-                }
-            }
-
-            (strpos($text, '[quote:destination_name]') !== false) and $text = str_replace('[quote:destination_name]',$this->destination->countryName,$text);
-        }
-
-        if ($this->destination)
-            $text = str_replace('[quote:destination_link]', $this->site->url . '/' . $this->destination->countryName . '/quote/' . $this->quote->id, $text);
-        else
-            $text = str_replace('[quote:destination_link]', '', $text);
-
-        if($this->user) {
-            (strpos($text, '[user:first_name]') !== false) and $text = str_replace('[user:first_name]'       , ucfirst(mb_strtolower($this->user->firstname)), $text);
-        }
-
+        
         return $text;
     }
 }
