@@ -15,6 +15,9 @@ require_once __DIR__ . '/../src/Repository/QuoteRepository.php';
 require_once __DIR__ . '/../src/Repository/SiteRepository.php';
 require_once __DIR__ . '/../src/TemplateManager.php';
 
+
+//This is a first commit to begin the test
+
 $faker = \Faker\Factory::create();
 
 $template = new Template(
