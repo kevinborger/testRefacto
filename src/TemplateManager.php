@@ -6,6 +6,8 @@ class TemplateManager
     protected ?Quote $quote;
     protected ?Site $site;
     protected ?Destination $destination;
+    protected array $replaces;
+
 
     public function getTemplateComputed(Template $tpl, array $data)
     {
@@ -22,6 +24,8 @@ class TemplateManager
             $this->site = SiteRepository::getInstance()->getById($quote->siteId);
             $this->destination = DestinationRepository::getInstance()->getById($quote->destinationId);
         }
+        $this->replaces = ReplaceRepository::getInstance()->getAll();
+
         $replaced = clone($tpl);
         $replaced->subject = $this->computeText($replaced->subject);
         $replaced->content = $this->computeText($replaced->content);
@@ -31,6 +35,13 @@ class TemplateManager
 
     private function computeText($text)
     {
+        /**
+         * @var Replace $replace
+         */
+        foreach($this->replaces as $replace) {
+            //TODO
+        }
+
         if ($this->quote)
         {
             $containsSummaryHtml = strpos($text, '[quote:summary_html]');
