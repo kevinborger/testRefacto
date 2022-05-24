@@ -33,6 +33,45 @@ class TemplateManager
         return $replaced;
     }
 
+    private function replace($search, $replace, $text) {
+        //I'm using strpos because idk if you're using php8 or not. If you're using it, I would have used str_contains
+        if(strpos($text, $search) !== false)
+            $text = str_replace($search, $replace, $text);
+        return $text;
+    }
+
+    private function quote_destination_link($text) {
+        $replace = $this->quote ?
+            $this->site->url . '/' . $this->destination->countryName . '/quote/' . $this->quote->id :
+            '';
+
+        return $this->replace('[quote:destination_link]', $replace, $text);
+    }
+
+    private function quote_summary_html($text) {
+        if($this->quote)
+            $text = $this->replace('[quote:summary_html]', Quote::renderHtml($this->quote), $text);
+        return $text;
+    }
+
+    private function quote_summary($text) {
+        if($this->quote)
+            $text = $this->replace('[quote:summary]', Quote::renderText($this->quote), $text);
+        return $text;
+    }
+
+    private function quote_destination_name($text) {
+        if($this->destination)
+            $text = $this->replace('[quote:destination_name]', $this->destination->countryName, $text);
+        return $text;
+    }
+
+    private function user_first_name($text) {
+        if($this->user)
+            $text = $this->replace('[user:first_name]', ucfirst(mb_strtolower($this->user->firstname)), $text);
+        return $text;
+    }
+
     private function computeText($text)
     {
         /**
